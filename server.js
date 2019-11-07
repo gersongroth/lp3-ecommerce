@@ -6,10 +6,10 @@ var express = require('express'),
   bodyParser = require('body-parser');
 
 // mongoose instance connection url connection
-mongoose.Promise = global.Promise;
+/*mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/ecommerce');
 
-
+*/
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
