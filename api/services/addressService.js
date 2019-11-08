@@ -19,3 +19,9 @@ exports.getLastAddress = async function(token) {
 
   return userModel.addresses.slice(-1)[0];
 }
+
+exports.getAddresses = async function(token) {
+  const userModel = await findByToken(token);
+
+  return userModel.addresses;
+}

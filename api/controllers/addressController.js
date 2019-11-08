@@ -2,7 +2,7 @@
 'use strict';
 
 const Address = require('../models/addressSchema');
-const { addAddress, getLastAddress } = require('../services/addressService');
+const { addAddress, getLastAddress, getAddresses } = require('../services/addressService');
 const { getHeaderToken } = require('../services/authService');
 
 
@@ -24,4 +24,12 @@ exports.addAddress = async function(req, res) {
         message: 'Erro ao inserir endereço',
       });
   }
+};
+
+exports.getAddresses = async function(req, res) {
+  const token = getHeaderToken(req);
+
+  const addresses = await getAddresses(token);
+  return res
+    .json(addresses);
 };
