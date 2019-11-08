@@ -2,7 +2,7 @@
 
 const Token = require('../models/tokenSchema');
 
-const { generateToken } = require('../services/tokenService');
+const { generateToken } = require('../services/authService');
 
 
 exports.generate = async function(req, res) {

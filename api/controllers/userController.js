@@ -1,7 +1,8 @@
 'use strict';
 
 const User = require('../models/userSchema');
-const { login } = require('../services/userService');
+const { login, findByToken } = require('../services/userService');
+const { getHeaderToken, userLoggedIn } = require('../services/authService');
 const moment = require('moment');
 
 const serializeUser = (user) => {
@@ -33,6 +34,16 @@ exports.login = async function(req, res) {
   if(user){
     console.log(`[LOGIN] Usuário ${user.username} realizou login com sucesso.`)
 
+    const success = userLoggedIn(req, user);
+    if(!success) {
+      return res
+        .status(500)
+        .json({
+          success: false,
+          message: 'Erro interno no servidor',
+        })
+    }
+
     res.json(serializeUser(user));
   } else {
     console.log(`[LOGIN] Falha no login do usuário ${user.username}.`)
@@ -56,6 +67,22 @@ exports.register = async function(req, res) {
     res.json(user);
   });
 };
+
+exports.getUser = async function(req, res) {
+  const token = getHeaderToken(req);
+  const user = await findByToken(token);
+
+  if (!user) {
+    return res
+      .status(400)
+      .json({
+      success: false,
+      message: 'Usuário não encontrado'
+    });
+  }
+
+  return res.json(serializeUser(user));
+}
 
 
 /*

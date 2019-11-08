@@ -14,6 +14,9 @@ const tokenSchema = new mongoose.Schema({
   },
   cart_id: {
     type: String,
+  },
+  logged_in: {
+    type: Boolean
   }
 })
 
