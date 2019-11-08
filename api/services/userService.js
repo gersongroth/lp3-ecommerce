@@ -7,7 +7,7 @@ exports.findByUsername = async function(username) {
 }
 
 exports.login = async function(username, password) {
-  return await User.find({
+  return await User.findOne({
     username,
     password,
   });

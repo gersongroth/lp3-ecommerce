@@ -4,24 +4,45 @@ const User = require('../models/userSchema');
 const { login } = require('../services/userService');
 const moment = require('moment');
 
+const serializeUser = (user) => {
+  return {
+    username: user.username,
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    cellPhone: user.cellPhone,
+    identityDocument: user.identityDocument,
+    legalDocument: user.legalDocument,
+    genre: user.genre,
+    birthday: moment(user.birthday).format('DD/MM/YYYY'),
+  }
+}
+
 exports.login = async function(req, res) {
   const { username, password } = req.body;
   if(!username || !password) {
-    res.send('Usuário e senha são obrigatórios');
+    res
+      .status(400)
+      .send('[LOGIN] Usuário e senha são obrigatórios');
+    return;
   }
 
   const user = await login(username, password);
-  console.log(user);
 
 
-  res.json({
-    teste: true,
-  })
-  /*User.find({}, function(err, task) {
-    if (err)
-      res.send(err);
-    res.json(task);
-  });*/
+  if(user){
+    console.log(`[LOGIN] Usuário ${user.username} realizou login com sucesso.`)
+
+    res.json(serializeUser(user));
+  } else {
+    console.log(`[LOGIN] Falha no login do usuário ${user.username}.`)
+    res
+      .status(401)
+      .json({
+        success: false,
+        message: 'Usuário ou senha incorretos'
+    });
+  }
 };
 
 exports.register = async function(req, res) {

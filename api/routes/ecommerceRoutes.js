@@ -1,7 +1,9 @@
 'use strict';
 module.exports = function(app) {
-  var ecommerce = require('../controllers/ecommerceController');
-  var user = require('../controllers/userController');
+  const ecommerce = require('../controllers/ecommerceController');
+  const user = require('../controllers/userController');
+  const token = require('../controllers/tokenController');
+  const { validateToken } = require('../services/tokenService');
 
   // todoList Routes
   app.route('/cart')
@@ -9,7 +11,7 @@ module.exports = function(app) {
     .post(ecommerce.create_cart);
 
   app.route('/login')
-    .post(user.login);
+    .post(validateToken, user.login);
   app.route('/register')
     .post(user.register);
 
@@ -18,6 +20,10 @@ module.exports = function(app) {
     .put(todoList.update_a_task)
     .delete(todoList.delete_a_task);*/
 
+
+  app
+    .route('/token/generate')
+    .get(token.generate);
 
     app.route('/test')
     .get(ecommerce.test);
