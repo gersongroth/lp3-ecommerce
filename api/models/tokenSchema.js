@@ -9,13 +9,13 @@ const tokenSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
   },
-  user_id: {
+  userId: {
     type: String,
   },
-  cart_id: {
+  cartId: {
     type: String,
   },
-  logged_in: {
+  loggedIn: {
     type: Boolean
   }
 })

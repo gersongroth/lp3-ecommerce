@@ -69,7 +69,7 @@ exports.validateLoggedIn = async function(req, res, next) {
     return accessDenied(res, 'Token é inválido.');
   }
 
-  if (!token.logged_in) {
+  if (!token.loggedIn) {
     return accessDenied(res, 'Usuário não está logado.');
   }
 
@@ -84,8 +84,8 @@ exports.userLoggedIn = async function(req, user) {
   },
   {
     $set: {
-      user_id: user._id,
-      logged_in: true,
+      userId: user._id,
+      loggedIn: true,
     }
   })
 }

@@ -9,12 +9,12 @@ exports.findByUsername = async function(username) {
 
 exports.findByToken = async function(headerToken) {
   const token = await getToken(headerToken);
-  if(!token || !token.user_id) {
+  if(!token || !token.userId) {
     return undefined;
   }
   
   return await User.findOne({
-    _id: token.user_id,
+    _id: token.userId,
   });
 }
 
