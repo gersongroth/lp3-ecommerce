@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { addressSchema } = require('../models/addressSchema');
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -40,6 +41,9 @@ const userSchema = new mongoose.Schema({
   },
   birthday: {
     type: Date,
+  },
+  addresses: {
+    type: [addressSchema],
   }
 })
 

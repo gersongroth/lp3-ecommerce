@@ -45,4 +45,3 @@ exports.updateUser = async function(token, user) {
   )
 }
 
-

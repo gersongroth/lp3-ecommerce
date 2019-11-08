@@ -3,6 +3,8 @@ module.exports = function(app) {
   const ecommerce = require('../controllers/ecommerceController');
   const user = require('../controllers/userController');
   const token = require('../controllers/tokenController');
+  const address = require('../controllers/addressController');
+
   const { validateToken, validateLoggedIn } = require('../services/authService');
 
   // todoList Routes
@@ -17,6 +19,9 @@ module.exports = function(app) {
   app.route('/user')
     .get(validateToken, validateLoggedIn, user.getUser)
     .patch(validateToken, validateLoggedIn, user.updateUser);
+
+  app.route('/address')
+    .post(validateToken, validateLoggedIn, address.addAddress)
 
  /* app.route('/tasks/:taskId')
     .get(todoList.read_a_task)
