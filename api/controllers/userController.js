@@ -1,7 +1,7 @@
 'use strict';
 
 const User = require('../models/userSchema');
-const { login, findByToken } = require('../services/userService');
+const { login, findByToken, updateUser } = require('../services/userService');
 const { getHeaderToken, userLoggedIn } = require('../services/authService');
 const moment = require('moment');
 
@@ -57,11 +57,11 @@ exports.login = async function(req, res) {
 };
 
 exports.register = async function(req, res) {
-  var new_user = new User(req.body);
-  new_user.birthday = moment(req.body.birthday, "DD/MM/YYYY").toDate();
-  new_user.createdAt = new Date();
+  var newUser = new User(req.body);
+  newUser.birthday = moment(req.body.birthday, "DD/MM/YYYY").toDate();
+  newUser.createdAt = new Date();
 
-  new_user.save(function(err, user) {
+  newUser.save(function(err, user) {
     if (err)
       res.send(err);
     res.json(user);
@@ -84,6 +84,24 @@ exports.getUser = async function(req, res) {
   return res.json(serializeUser(user));
 }
 
+exports.updateUser = async function(req, res) {
+  const token = getHeaderToken(req);
+
+  const updated = await updateUser(token, req.body);
+  if(updated) {
+    const updatedUser = await findByToken(token);
+    return res.json(serializeUser(updatedUser));
+  } else {
+    return res
+      .status(500)
+      .json({
+        success: false,
+        message: 'Erro atualizando usuário',
+      })
+  }
+
+}
+ 
 
 /*
 exports.create_cart = function(req, res) {

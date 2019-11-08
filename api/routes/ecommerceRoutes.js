@@ -15,7 +15,8 @@ module.exports = function(app) {
   app.route('/register')
     .post(validateToken, user.register);
   app.route('/user')
-    .get(validateToken, validateLoggedIn, user.getUser);
+    .get(validateToken, validateLoggedIn, user.getUser)
+    .patch(validateToken, validateLoggedIn, user.updateUser);
 
  /* app.route('/tasks/:taskId')
     .get(todoList.read_a_task)
