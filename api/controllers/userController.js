@@ -46,7 +46,7 @@ exports.login = async function(req, res) {
 
     res.json(serializeUser(user));
   } else {
-    console.log(`[LOGIN] Falha no login do usuário ${user.username}.`)
+    console.log(`[LOGIN] Falha no login do usuário ${username}.`)
     res
       .status(401)
       .json({

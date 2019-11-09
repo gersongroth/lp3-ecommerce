@@ -22,9 +22,24 @@ const findByToken = async function(headerToken) {
 exports.findByToken = findByToken;
 
 exports.login = async function(username, password) {
-  return await User.findOne({
+  const userWithUsername = await User.findOne({
     username,
     password,
+  });
+  if(userWithUsername) {
+    return userWithUsername;
+  }
+  const userWithLegalDocument = await User.findOne({
+    password,
+    legalDocument: username,
+  });
+  if(userWithLegalDocument) {
+    return userWithLegalDocument;
+  }
+
+  return await User.findOne({
+    password,
+    email: username,
   });
 }
 
