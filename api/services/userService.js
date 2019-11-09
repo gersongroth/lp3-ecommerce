@@ -52,6 +52,7 @@ exports.updateUser = async function(token, user) {
     cellPhone: user.cellPhone,
     identityDocument: user.identityDocument,
     genre: user.genre,
+    email: user.email,
   };
 
   return await User.findOneAndUpdate(

@@ -4,6 +4,7 @@ module.exports = function(app) {
   const user = require('../controllers/userController');
   const token = require('../controllers/tokenController');
   const address = require('../controllers/addressController');
+  const category = require('../controllers/categoryController');
 
   const { validateToken, validateLoggedIn } = require('../services/authService');
 
@@ -27,6 +28,15 @@ module.exports = function(app) {
     .get(validateToken, validateLoggedIn, address.getAddress)
     .put(validateToken, validateLoggedIn, address.updateAddress)
     .delete(validateToken, validateLoggedIn, address.removeAddress)
+  
+  app.route('/category')
+    .post(category.addCategory)
+    .get(category.getCategories)
+
+  app.route('/category/:id')
+    .get(category.getCategory)
+    .put(category.updateCategory)
+    .delete(category.removeCategory)
 
  /* app.route('/tasks/:taskId')
     .get(todoList.read_a_task)
