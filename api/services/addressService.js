@@ -28,7 +28,17 @@ exports.getAddresses = async function(token) {
 
 exports.getAddress = async function(token, addressId) {
   const userModel = await findByToken(token);
-  const addresses = userModel.addresses;
-  console.log(addresses);
-  return addresses.filter((address) => address._id == addressId)[0];
+  return userModel.addresses.id(addressId);
+}
+
+exports.updateAddress = async function(token, addressId, addressUpdate) {
+  const userModel = await findByToken(token);
+  const address = userModel.addresses.id(addressId);
+  if(!address) {
+    return;
+  }
+  address.set(addressUpdate);
+  userModel.save();
+
+  return address;
 }
