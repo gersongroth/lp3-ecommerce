@@ -42,3 +42,15 @@ exports.updateAddress = async function(token, addressId, addressUpdate) {
 
   return address;
 }
+
+exports.removeAddress = async function(token, addressId) {
+  const userModel = await findByToken(token);
+  const address = userModel.addresses.id(addressId);
+  if(!address) {
+    return;
+  }
+  address.remove();
+  userModel.save();
+
+  return address;
+}

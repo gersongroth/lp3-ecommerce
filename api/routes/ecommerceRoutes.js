@@ -26,6 +26,7 @@ module.exports = function(app) {
   app.route('/address/:id')
     .get(validateToken, validateLoggedIn, address.getAddress)
     .put(validateToken, validateLoggedIn, address.updateAddress)
+    .delete(validateToken, validateLoggedIn, address.removeAddress)
 
  /* app.route('/tasks/:taskId')
     .get(todoList.read_a_task)

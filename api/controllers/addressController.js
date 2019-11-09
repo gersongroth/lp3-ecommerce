@@ -8,6 +8,7 @@ const {
   getAddresses,
   getAddress,
   updateAddress,
+  removeAddress,
 } = require('../services/addressService');
 const { getHeaderToken } = require('../services/authService');
 
@@ -68,6 +69,28 @@ exports.updateAddress = async function(req, res) {
   if(address) {
     return res
       .json(address);
+  } else {
+    return res
+      .status(404)
+      .json({
+        success: false,
+        message: 'Endereço não encontrado.'
+      });
+  }
+};
+
+exports.removeAddress = async function(req, res) {
+  const token = getHeaderToken(req);
+  const id = req.params.id;
+
+  const address = await removeAddress(token, id);
+  
+  if(address) {
+    return res
+      .json({
+        success: true,
+        message: 'Endereço removido com sucesso',
+      });
   } else {
     return res
       .status(404)
