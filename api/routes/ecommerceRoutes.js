@@ -23,7 +23,8 @@ module.exports = function(app) {
   app.route('/address')
     .post(validateToken, validateLoggedIn, address.addAddress)
     .get(validateToken, validateLoggedIn, address.getAddresses)
-
+  app.route('/address/:id')
+    .get(validateToken, validateLoggedIn, address.getAddress)
  /* app.route('/tasks/:taskId')
     .get(todoList.read_a_task)
     .put(todoList.update_a_task)

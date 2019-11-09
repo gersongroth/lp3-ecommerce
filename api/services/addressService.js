@@ -25,3 +25,10 @@ exports.getAddresses = async function(token) {
 
   return userModel.addresses;
 }
+
+exports.getAddress = async function(token, addressId) {
+  const userModel = await findByToken(token);
+  const addresses = userModel.addresses;
+  console.log(addresses);
+  return addresses.filter((address) => address._id == addressId)[0];
+}

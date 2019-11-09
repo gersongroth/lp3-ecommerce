@@ -2,7 +2,12 @@
 'use strict';
 
 const Address = require('../models/addressSchema');
-const { addAddress, getLastAddress, getAddresses } = require('../services/addressService');
+const {
+  addAddress,
+  getLastAddress,
+  getAddresses,
+  getAddress,
+} = require('../services/addressService');
 const { getHeaderToken } = require('../services/authService');
 
 
@@ -32,4 +37,24 @@ exports.getAddresses = async function(req, res) {
   const addresses = await getAddresses(token);
   return res
     .json(addresses);
+};
+
+exports.getAddress = async function(req, res) {
+  const token = getHeaderToken(req);
+  const id = req.params.id;
+  console.log(id);
+
+  const address = await getAddress(token, id);
+  
+  if(address) {
+    return res
+      .json(address);
+  } else {
+    return res
+      .status(404)
+      .json({
+        success: false,
+        message: 'Endereço não encontrado.'
+      });
+  }
 };
