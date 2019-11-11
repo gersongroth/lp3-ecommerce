@@ -62,13 +62,14 @@ exports.register = async function(req, res) {
   newUser.createdAt = new Date();
 
   newUser.save(function(err, user) {
-    if (err)
+    if (err) {
       res
         .status(400)
         .json({
           success: false,
           message: err,
         });
+    }
     res.json(user);
   });
 };
