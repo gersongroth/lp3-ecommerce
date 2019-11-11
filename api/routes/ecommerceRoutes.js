@@ -6,6 +6,7 @@ module.exports = function(app) {
   const address = require('../controllers/addressController');
   const category = require('../controllers/categoryController');
   const brand = require('../controllers/brandController');
+  const product = require('../controllers/productController');
 
 
   const { validateToken, validateLoggedIn } = require('../services/authService');
@@ -42,12 +43,21 @@ module.exports = function(app) {
   
   app.route('/brand')
     .post(brand.addBrand)
-    .get(brand.getBrandies)
+    .get(brand.getBrands)
 
   app.route('/brand/:id')
     .get(brand.getBrand)
     .put(brand.updateBrand)
     .delete(brand.removeBrand)
+
+  app.route('/product')
+    .post(product.addProduct)
+    .get(product.getProducts)
+
+  app.route('/product/:id')
+    .get(product.getProduct)
+    .put(product.updateProduct)
+    .delete(product.removeProduct)
 
  /* app.route('/tasks/:taskId')
     .get(todoList.read_a_task)

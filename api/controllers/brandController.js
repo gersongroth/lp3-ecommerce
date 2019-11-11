@@ -3,7 +3,7 @@
 
 const Brand = require('../models/brandSchema');
 const {
-  getBrandies,
+  getBrands,
   getBrand,
   updateBrand,
   removeBrand,
@@ -20,8 +20,8 @@ exports.addBrand = async function(req, res) {
   });
 };
 
-exports.getBrandies = async function(req, res) {
-  const categories = await getBrandies(req.query.search || '');
+exports.getBrands = async function(req, res) {
+  const categories = await getBrands(req.query.search || '');
   return res
     .json(categories);
 };
