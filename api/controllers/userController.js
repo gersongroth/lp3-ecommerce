@@ -57,13 +57,21 @@ exports.login = async function(req, res) {
 };
 
 exports.register = async function(req, res) {
-  var newUser = new User(req.body);
-  newUser.birthday = moment(req.body.birthday, "DD/MM/YYYY").toDate();
+  const newUser = new User(req.body);
+  let birthday = undefined;
+  if(moment(req.body.birthday, "DD/MM/YYYY").isValid()) {
+    birthday = moment(req.body.birthday, "DD/MM/YYYY").toDate();
+  } else {
+    birthday = moment(req.body.birthday).toDate();
+  }
+
+  newUser.birthday = birthday;
+  console.log(newUser.birthday)
   newUser.createdAt = new Date();
 
   newUser.save(function(err, user) {
     if (err) {
-      res
+      return res
         .status(400)
         .json({
           success: false,
