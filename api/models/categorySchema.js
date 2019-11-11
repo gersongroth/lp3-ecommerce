@@ -13,9 +13,6 @@ const categorySchema = new mongoose.Schema({
   },
   children: {
     type: Array,
-  },
-  createdAt: {
-    type: Date,
   }
 });
 
