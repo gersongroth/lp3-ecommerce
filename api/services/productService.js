@@ -34,3 +34,26 @@ exports.removeProduct = async function(productId) {
     console.error('Erro removendo produto', e);
   }
 }
+
+exports.getProductNews = async function() {
+  try {
+    console.log('teste')
+    return await Product
+      .find()
+      .sort({'createdAt': -1})
+      .limit(10);
+  } catch(e) {
+    console.error('Erro buscando produto', e);
+  }
+}
+
+exports.getProductBestSellers = async function() {
+  try {
+    // TODO - retornar a partir dos pedidos
+    return await Product
+      .find({})
+      .limit(10);
+  } catch(e) {
+    console.error('Erro buscando produto', e);
+  }
+}

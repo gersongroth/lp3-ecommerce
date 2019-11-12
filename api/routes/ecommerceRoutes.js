@@ -59,6 +59,11 @@ module.exports = function(app) {
     .put(product.updateProduct)
     .delete(product.removeProduct)
 
+  app.route('/products/news')
+    .get(product.getProductNews);
+  app.route('/products/bestsellers')
+    .get(product.getProductBestSellers);
+
  /* app.route('/tasks/:taskId')
     .get(todoList.read_a_task)
     .put(todoList.update_a_task)

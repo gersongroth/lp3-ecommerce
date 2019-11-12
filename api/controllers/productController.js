@@ -7,6 +7,8 @@ const {
   getProduct,
   updateProduct,
   removeProduct,
+  getProductNews,
+  getProductBestSellers,
 } = require('../services/productService');
 const {
   getBrandExactMatch,
@@ -127,3 +129,13 @@ exports.removeProduct = async function(req, res) {
       });
   }
 };
+
+exports.getProductNews = async function(req, res) {
+  const products = await getProductNews();
+  return res.json(products);
+}
+
+exports.getProductBestSellers = async function(req, res) {
+  const products = await getProductBestSellers();
+  return res.json(products);
+}
