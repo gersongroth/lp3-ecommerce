@@ -12,19 +12,38 @@ const {
   getBrandExactMatch,
 } = require('../services/brandService');
 
-exports.addProduct = async function(req, res) {
+const getProductFromRequest = async (req) => {
   const body = req.body;
   const product = {
-    description: body.description,
-    longDescription: body.longDescription,
-    images: body.images,
-    listPrice: body.listPrice,
-    salePrice: body.salePrice, 
-    stock: body.stock
-  }
+  };
+  [
+    'description',
+    'longDescription',
+    'images',
+    'listPrice',
+    'salePrice',
+    'stock'
+  ].forEach((element) => {
+    if(body[element]) {
+      product[element] = body[element];
+    }
+  });
 
   const brand = await getBrandExactMatch(body.brand);
-  if(!brand) {
+  if(brand) {
+    product.brand = brand;
+  }
+  
+  // TODO - adicionar parentCategories. Se qualquer uma das categorias passada for inválida, retorna erro. Se não tiver categorias, não tem problema...
+
+  return product;
+}
+
+exports.addProduct = async function(req, res) {
+
+  const newProduct = new Product(await getProductFromRequest(req));
+  
+  if(!newProduct.brand) {
     return res
       .status(400)
       .json({
@@ -33,11 +52,6 @@ exports.addProduct = async function(req, res) {
       })
   }
 
-  product.brand = brand;
-
-  // TODO - adidcionar parentCategories. Se qualquer uma das categorias passada for inválida, retorna erro. Se não tiver categorias, não tem problema...
-
-  const newProduct = new Product(product);
   newProduct.createdAt = new Date();
   if(!newProduct.releaseDate) {
     newProduct.releaseDate = new Date();
@@ -76,8 +90,8 @@ exports.getProduct = async function(req, res) {
 
 exports.updateProduct = async function(req, res) {
   const id = req.params.id;
-
-  const success = await updateProduct(id, req.body);
+  const productToUpdate = await getProductFromRequest(req);
+  const success = await updateProduct(id, productToUpdate);
   
   if(success) {
     const product = await getProduct(id);

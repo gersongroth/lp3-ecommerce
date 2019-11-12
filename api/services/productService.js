@@ -21,11 +21,7 @@ exports.getProduct = async function(productId) {
 
 exports.updateProduct = async function(productId, productUpdate) {
   try {
-    const update = {
-      description: productUpdate.description,
-      image: productUpdate.image,
-    }
-    return await Product.findByIdAndUpdate(productId, update);
+    return await Product.findByIdAndUpdate(productId, productUpdate);
   } catch(e) {
     console.error('Erro atualizando produto', e);
   }
