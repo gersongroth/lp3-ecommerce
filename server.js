@@ -1,3 +1,6 @@
+require('dotenv/config');
+const config = require('./config/mongo');
+
 var express = require('express'),
   app = express(),
   port = process.env.PORT || 3300,
@@ -8,7 +11,7 @@ var express = require('express'),
 
 // mongoose instance connection url connection
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb+srv://admin:C0nnect123@cluster0-jhe7l.mongodb.net/test?retryWrites=true&w=majority');
+mongoose.connect(config.mongoHost);
 
 /*
 new User({
