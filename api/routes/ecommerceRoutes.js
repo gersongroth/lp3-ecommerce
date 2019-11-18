@@ -7,14 +7,14 @@ module.exports = function(app) {
   const category = require('../controllers/categoryController');
   const brand = require('../controllers/brandController');
   const product = require('../controllers/productController');
+  const cart = require('../controllers/cartController');
 
 
   const { validateToken, validateLoggedIn } = require('../services/authService');
 
   // todoList Routes
   app.route('/cart')
-    .get(ecommerce.get_cart)
-    .post(ecommerce.create_cart);
+    .get(cart.getCurrentCart);
 
   app.route('/login')
     .post(validateToken, user.login);
