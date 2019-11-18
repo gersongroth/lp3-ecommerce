@@ -20,12 +20,19 @@ const orderSchema = new mongoose.Schema({
   commerceItems: [ commerceItemSchema ],
   total: {
     type: Number,
+    default: 0,
   },
   gross: {
     type: Number,
+    default: 0,
   },
   discount: {
     type: Number,
+    default: 0,
+  },
+  freight: {
+    type: Number,
+    default: 0,
   }
 });
 
