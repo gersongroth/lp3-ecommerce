@@ -17,7 +17,16 @@ const orderSchema = new mongoose.Schema({
   submittedDate: {
     type: Date,
   },
-  commerceItems: [ commerceItemSchema ]
+  commerceItems: [ commerceItemSchema ],
+  total: {
+    type: Number,
+  },
+  gross: {
+    type: Number,
+  },
+  discount: {
+    type: Number,
+  }
 });
 
 const Order = mongoose.model('Order', orderSchema);

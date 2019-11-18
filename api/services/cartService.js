@@ -25,21 +25,23 @@ const getCurrent = async function(token) {
   });
 
   if (lastCart) {
-    return renderCart(lastCart);
+    return lastCart;
   }
 
   const newCartModel = new Order({
     owner: userModel,
     createdAt: new Date(),
   });
-  console.log('teste')
   const newCart = await newCartModel.save();
-  console.log(newCart);
 
-  return renderCart(newCart);
+  return newCart;
 };
 
-exports.getCurrent = getCurrent;
+const getCurrentSerialized = async function(token) {
+  return renderCart(await getCurrent(token));
+}
+
+exports.getCurrent = getCurrentSerialized;
 
 const errorMessage = (message) => {
   return {
@@ -60,9 +62,9 @@ exports.addItem = async function(token, item) {
   
   const unitPrice = product.salePrice ? product.salePrice : product.listPrice;
   const amount = item.amount || 1;
-  const total = unitPrice * amount;
-  const gross = amount * product.listPrice;
-  const discount = gross - total;
+  const total = (unitPrice * amount).toFixed(2);
+  const gross = (amount * product.listPrice).toFixed(2);
+  const discount = (gross - total).toFixed(2);
 
   // TODO - criar calculadora de preço do item
   const newItem = new CommerceItem({
@@ -74,12 +76,36 @@ exports.addItem = async function(token, item) {
     unit: unitPrice,
  });
 
-  const cartUpdated = await Order.findOneAndUpdate(
+  await Order.findOneAndUpdate(
     { _id: cart._id },
     { $push: { commerceItems: newItem } }
   );
 
-  return renderCart(cartUpdated);
+  return calculateCart(token);
+}
+
+const calculateCart = async (token) => {
+  const current = await getCurrent(token);
+
+  const price = current.commerceItems.reduce((accumulator, item) => {
+    return {
+      total: accumulator.total + item.total,
+      discount: accumulator.discount + item.discount,
+      gross: accumulator.gross + item.gross,
+    }
+  }, {
+    total: 0,
+    discount: 0,
+    gross: 0,
+  });
+
+  current.total = price.total.toFixed(2);
+  current.discount = price.discount.toFixed(2);
+  current.gross = price.gross.toFixed(2);
+
+  await current.save();
+
+  return renderCart(current);
 }
 
 
