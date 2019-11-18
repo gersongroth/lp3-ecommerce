@@ -15,6 +15,8 @@ module.exports = function(app) {
   // todoList Routes
   app.route('/cart')
     .get(cart.getCurrentCart);
+  app.route('/cart/addItem')
+    .post(cart.addItem);
 
   app.route('/login')
     .post(validateToken, user.login);

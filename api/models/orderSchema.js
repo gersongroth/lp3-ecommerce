@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
 const { userSchema } = require('./userSchema');
+const { commerceItemSchema } = require('./commerceItemSchema');
+
 
 const orderSchema = new mongoose.Schema({
   status: {
@@ -14,7 +16,8 @@ const orderSchema = new mongoose.Schema({
   },
   submittedDate: {
     type: Date,
-  }
+  },
+  commerceItems: [ commerceItemSchema ]
 });
 
 const Order = mongoose.model('Order', orderSchema);

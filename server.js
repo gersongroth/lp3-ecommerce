@@ -13,14 +13,6 @@ var express = require('express'),
 mongoose.Promise = global.Promise;
 mongoose.connect(config.mongoHost);
 
-/*
-new User({
-  username: 'teste',
-  password: 'aaa',
-  legalDocument: '000000000'
-}).save();
-*/
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
