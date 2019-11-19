@@ -1,6 +1,5 @@
 'use strict';
 module.exports = function(app) {
-  const ecommerce = require('../controllers/ecommerceController');
   const user = require('../controllers/userController');
   const token = require('../controllers/tokenController');
   const address = require('../controllers/addressController');
@@ -9,7 +8,7 @@ module.exports = function(app) {
   const product = require('../controllers/productController');
   const cart = require('../controllers/cartController');
   const price = require('../controllers/priceController');
-
+  const newsletter = require('../controllers/newsletterController');
 
   const { validateToken, validateLoggedIn } = require('../services/authService');
 
@@ -84,6 +83,6 @@ module.exports = function(app) {
     .route('/token/generate')
     .get(token.generate);
 
-    app.route('/test')
-    .get(ecommerce.test);
+  app.route('/newsletter')
+    .post(newsletter.subscribe);
 };
