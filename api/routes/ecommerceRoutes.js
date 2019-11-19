@@ -19,8 +19,10 @@ module.exports = function(app) {
     .post(validateToken, cart.addItem, price.repriceOrder, cart.getCurrent);
   app.route('/cart/deleteItem/:commerceItem')
     .delete(validateToken, cart.deleteItem, price.repriceOrder, cart.getCurrent);
-    app.route('/cart/updateItem/:commerceItem')
+  app.route('/cart/updateItem/:commerceItem')
     .patch(validateToken, cart.updateItem, price.repriceOrder, cart.getCurrent);
+  app.route('/cart/items')
+    .get(validateToken, price.repriceOrder, cart.getItems);
 
   app.route('/login')
     .post(validateToken, user.login);

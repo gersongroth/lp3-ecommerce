@@ -18,6 +18,15 @@ exports.getCurrent = async function(req, res) {
     .json(renderCart(current));
 };
 
+exports.getItems = async function(req, res) {
+  const token = getHeaderToken(req);
+
+  const current = await getCurrent(token);
+  const cartSerialized = renderCart(current);
+  return res
+    .json(cartSerialized.commerceItems);
+}
+
 exports.addItem = async function(req, res, next) {
   const token = getHeaderToken(req);
 
