@@ -90,3 +90,9 @@ exports.userLoggedIn = async function(req, user) {
   })
 }
 
+exports.logout = async function(token) {
+  return await (Token.findOneAndDelete({
+    token: token,
+  }));
+}
+

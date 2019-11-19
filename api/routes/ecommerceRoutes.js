@@ -14,14 +14,16 @@ module.exports = function(app) {
 
   // todoList Routes
   app.route('/cart')
-    .get(cart.getCurrentCart);
+    .get(validateToken, cart.getCurrentCart);
   app.route('/cart/addItem')
-    .post(cart.addItem);
+    .post(validateToken, cart.addItem);
   app.route('/cart/deleteItem/:commerceItem')
-    .delete(cart.deleteItem);
+    .delete(validateToken, cart.deleteItem);
 
   app.route('/login')
     .post(validateToken, user.login);
+  app.route('/logout')
+    .post(validateToken, validateLoggedIn, user.logout);
   app.route('/register')
     .post(validateToken, user.register);
   app.route('/user')

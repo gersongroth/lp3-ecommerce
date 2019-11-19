@@ -2,7 +2,7 @@
 
 const User = require('../models/userSchema');
 const { login, findByToken, updateUser } = require('../services/userService');
-const { getHeaderToken, userLoggedIn } = require('../services/authService');
+const { getHeaderToken, userLoggedIn, logout } = require('../services/authService');
 const moment = require('moment');
 
 const serializeUser = (user) => {
@@ -115,6 +115,24 @@ exports.updateUser = async function(req, res) {
   }
 
 }
+
+exports.logout = async function(req, res) {
+  const token = getHeaderToken(req);
+  try {
+    await logout(token);
+    return res.json({
+      success: true,
+    });
+  } catch(e) {
+    console.error('Erro removendo token', e);
+  }
+  return res
+    .status(500)
+    .json({
+      success: false,
+      message: 'Não foi possível realizar logout'
+    })
+};
  
 
 /*
