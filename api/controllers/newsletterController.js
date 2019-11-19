@@ -3,8 +3,8 @@
 const Newsletter = require('../models/newsletterSchema');
 
 const isSubscribed = async (email) => {
-  const subscribed = Newsletter.findOne({ email});
-  return !!subscribed;
+  const subscribed = await Newsletter.findOne({ email});
+  return subscribed;
 }
 
 exports.subscribe = async function(req, res) {
@@ -49,3 +49,26 @@ exports.subscribe = async function(req, res) {
     });
   });
 };
+
+exports.unsubscribe = async function(req, res) {
+  const { email } = req.body;
+  if(!email) {
+    res
+      .status(400)
+      .json({
+        success: false,
+        message: 'Email é obrigatório',
+      });
+    return;
+  }
+
+  await Newsletter.findOneAndDelete({ email });
+
+  res
+    .status(200)
+    .json({
+      success: true,
+      message: 'Email removido com sucesso!',
+    });
+};
+

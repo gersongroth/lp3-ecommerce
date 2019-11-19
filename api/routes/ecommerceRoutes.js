@@ -12,6 +12,11 @@ module.exports = function(app) {
 
   const { validateToken, validateLoggedIn } = require('../services/authService');
 
+  // TODO - organizar rotas
+
+  /**
+   * Cart
+   */
   app.route('/cart')
     .get(validateToken, price.repriceOrder, cart.getCurrent);
   app.route('/cart/addItem')
@@ -23,6 +28,9 @@ module.exports = function(app) {
   app.route('/cart/items')
     .get(validateToken, price.repriceOrder, cart.getItems);
 
+  /**
+   * User
+   */
   app.route('/login')
     .post(validateToken, user.login);
   app.route('/logout')
@@ -41,6 +49,9 @@ module.exports = function(app) {
     .put(validateToken, validateLoggedIn, address.updateAddress)
     .delete(validateToken, validateLoggedIn, address.removeAddress)
   
+  /**
+   * Catalog
+   */
   app.route('/category')
     .post(category.addCategory)
     .get(category.getCategories)
@@ -73,16 +84,17 @@ module.exports = function(app) {
   app.route('/products/bestsellers')
     .get(product.getProductBestSellers);
 
- /* app.route('/tasks/:taskId')
-    .get(todoList.read_a_task)
-    .put(todoList.update_a_task)
-    .delete(todoList.delete_a_task);*/
-
-
+  /**
+   * Token
+   */
   app
     .route('/token/generate')
     .get(token.generate);
 
+  /**
+   * Newsletter
+   */
   app.route('/newsletter')
-    .post(newsletter.subscribe);
+    .post(newsletter.subscribe)
+    .delete(newsletter.unsubscribe);
 };
