@@ -7,53 +7,6 @@ const { findByToken } = require('./userService');
 const { getProduct } = require('./productService');
 
 // TODO - verificar melhor forma de serializar esses objetos
-
-const renderCommerceItem = (commerceItem) => {
-  const product = commerceItem.product || {};
-  commerceItem.product = {
-    _id: product._id,
-    images: product.images,
-    description: product.description,
-    brand: product.brand,
-  };
-
-  return commerceItem;
-};
-
-const renderCart = (cartModel) => {
-  cartModel.owner = {
-    _id: cartModel.owner._id,
-    firstName: cartModel.owner.firstName,
-    lastName: cartModel.owner.lastName,
-  }
-  cartModel.commerceItems = cartModel.commerceItems.map(renderCommerceItem);
-  return cartModel;
-};
-
-const calculateCart = async (token) => {
-  const current = await getCurrent(token);
-
-  const price = current.commerceItems.reduce((accumulator, item) => {
-    return {
-      total: accumulator.total + item.total,
-      discount: accumulator.discount + item.discount,
-      gross: accumulator.gross + item.gross,
-    }
-  }, {
-    total: 0,
-    discount: 0,
-    gross: 0,
-  });
-
-  current.total = price.total.toFixed(2);
-  current.discount = price.discount.toFixed(2);
-  current.gross = price.gross.toFixed(2);
-
-  await current.save();
-
-  return renderCart(current);
-}
-
 const getCurrent = async function(token) {
   const userModel = await findByToken(token);
 
@@ -75,18 +28,7 @@ const getCurrent = async function(token) {
   return newCart;
 };
 
-const getCurrentSerialized = async function(token) {
-  return renderCart(await getCurrent(token));
-}
-
-exports.getCurrent = getCurrentSerialized;
-
-const errorMessage = (message) => {
-  return {
-    message,
-    success: false,
-  }
-}
+exports.getCurrent = getCurrent;
 
 exports.addItem = async function(token, item) {
   const cart = await getCurrent(token);
@@ -95,32 +37,19 @@ exports.addItem = async function(token, item) {
   const product =  await getProduct(item.productId);
 
   if(!product) {
-    return errorMessage('Produto não encontrado!')
+    throw new Error('Produto não encontrado!');
   }
-  
-  const unitPrice = product.salePrice ? product.salePrice : product.listPrice;
-  const amount = item.amount || 1;
-  const total = (unitPrice * amount).toFixed(2);
-  const gross = (amount * product.listPrice).toFixed(2);
-  const discount = (gross - total).toFixed(2);
 
-  // TODO - criar calculadora de preço do item
   const newItem = new CommerceItem({
     product,
-    amount,
-    total,
-    gross,
-    discount,
     productId: item.productId,
-    unit: unitPrice,
- });
+    amount: item.amount,
+  });
 
-  await Order.findOneAndUpdate(
+  return await Order.findOneAndUpdate(
     { _id: cart._id },
     { $push: { commerceItems: newItem } }
   );
-
-  return calculateCart(token);
 }
 
 exports.deleteItem = async function(token, itemId) {
@@ -128,11 +57,33 @@ exports.deleteItem = async function(token, itemId) {
   const item = cart.commerceItems.id(itemId);
 
   if(!item) {
-    return;
+    throw new Error('Item não encontrado');
   }
 
   item.remove();
   cart.save();
 
-  return renderCommerceItem(item);
+  return item;
+}
+
+exports.updateItem = async function(token, commerceItemId, item) {
+  const cart = await getCurrent(token);
+  const itemModel = cart.commerceItems.id(commerceItemId);
+
+  if(!itemModel) {
+    throw new Error('Item não encontrado')
+  }
+
+  const product =  await getProduct(itemModel.productId);
+  if(!product) {
+    throw new Error('Produto não encontrado!');
+  }
+
+  itemModel.set({
+    amount: item.amount
+  });
+
+  await cart.save();
+
+  return itemModel;
 }

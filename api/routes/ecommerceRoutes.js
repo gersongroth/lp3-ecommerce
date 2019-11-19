@@ -8,17 +8,19 @@ module.exports = function(app) {
   const brand = require('../controllers/brandController');
   const product = require('../controllers/productController');
   const cart = require('../controllers/cartController');
+  const price = require('../controllers/priceController');
 
 
   const { validateToken, validateLoggedIn } = require('../services/authService');
 
-  // todoList Routes
   app.route('/cart')
-    .get(validateToken, cart.getCurrentCart);
+    .get(validateToken, price.repriceOrder, cart.getCurrent);
   app.route('/cart/addItem')
-    .post(validateToken, cart.addItem);
+    .post(validateToken, cart.addItem, price.repriceOrder, cart.getCurrent);
   app.route('/cart/deleteItem/:commerceItem')
-    .delete(validateToken, cart.deleteItem);
+    .delete(validateToken, cart.deleteItem, price.repriceOrder, cart.getCurrent);
+    app.route('/cart/updateItem/:commerceItem')
+    .patch(validateToken, cart.updateItem, price.repriceOrder, cart.getCurrent);
 
   app.route('/login')
     .post(validateToken, user.login);

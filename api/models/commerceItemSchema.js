@@ -16,19 +16,23 @@ const commerceItemSchema = new mongoose.Schema({
   amount: {
     type: Number,
     required: [true, 'Quantidade do item é obrigatória'],
+    min: 1,
   },
   unit: {
     type: Number,
-    required: [true, 'Preço do item é obrigatório'],
+    default: 0,
   },
   total: {
     type: Number,
+    default: 0,
   },
   gross: {
     type: Number,
+    default: 0,
   },
   discount: {
     type: Number,
+    default: 0,
   }
 });
 

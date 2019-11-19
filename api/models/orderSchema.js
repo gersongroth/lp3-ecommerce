@@ -33,7 +33,15 @@ const orderSchema = new mongoose.Schema({
   freight: {
     type: Number,
     default: 0,
-  }
+  },
+  totalNumberOfItems: {
+    type: Number,
+    default: 0
+  },
+  numberOfDistinctProducts: {
+    type: Number,
+    default: 0
+  },
 });
 
 const Order = mongoose.model('Order', orderSchema);

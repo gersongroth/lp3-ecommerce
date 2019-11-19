@@ -37,7 +37,6 @@ exports.removeProduct = async function(productId) {
 
 exports.getProductNews = async function() {
   try {
-    console.log('teste')
     return await Product
       .find()
       .sort({'createdAt': -1})

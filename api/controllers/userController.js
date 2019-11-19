@@ -66,7 +66,6 @@ exports.register = async function(req, res) {
   }
 
   newUser.birthday = birthday;
-  console.log(newUser.birthday)
   newUser.createdAt = new Date();
 
   newUser.save(function(err, user) {
