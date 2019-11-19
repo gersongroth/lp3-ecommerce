@@ -7,12 +7,26 @@ const { findByToken } = require('./userService');
 const { getProduct } = require('./productService');
 
 // TODO - verificar melhor forma de serializar esses objetos
+
+const renderCommerceItem = (commerceItem) => {
+  const product = commerceItem.product || {};
+  commerceItem.product = {
+    _id: product._id,
+    images: product.images,
+    description: product.description,
+    brand: product.brand,
+  };
+
+  return commerceItem;
+};
+
 const renderCart = (cartModel) => {
   cartModel.owner = {
     _id: cartModel.owner._id,
     firstName: cartModel.owner.firstName,
     lastName: cartModel.owner.lastName,
   }
+  cartModel.commerceItems = cartModel.commerceItems.map(renderCommerceItem);
   return cartModel;
 };
 
@@ -68,6 +82,7 @@ exports.addItem = async function(token, item) {
 
   // TODO - criar calculadora de preço do item
   const newItem = new CommerceItem({
+    product,
     amount,
     total,
     gross,
