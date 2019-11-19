@@ -30,6 +30,30 @@ const renderCart = (cartModel) => {
   return cartModel;
 };
 
+const calculateCart = async (token) => {
+  const current = await getCurrent(token);
+
+  const price = current.commerceItems.reduce((accumulator, item) => {
+    return {
+      total: accumulator.total + item.total,
+      discount: accumulator.discount + item.discount,
+      gross: accumulator.gross + item.gross,
+    }
+  }, {
+    total: 0,
+    discount: 0,
+    gross: 0,
+  });
+
+  current.total = price.total.toFixed(2);
+  current.discount = price.discount.toFixed(2);
+  current.gross = price.gross.toFixed(2);
+
+  await current.save();
+
+  return renderCart(current);
+}
+
 const getCurrent = async function(token) {
   const userModel = await findByToken(token);
 
@@ -99,28 +123,16 @@ exports.addItem = async function(token, item) {
   return calculateCart(token);
 }
 
-const calculateCart = async (token) => {
-  const current = await getCurrent(token);
+exports.deleteItem = async function(token, itemId) {
+  const cart = await getCurrent(token);
+  const item = cart.commerceItems.id(itemId);
 
-  const price = current.commerceItems.reduce((accumulator, item) => {
-    return {
-      total: accumulator.total + item.total,
-      discount: accumulator.discount + item.discount,
-      gross: accumulator.gross + item.gross,
-    }
-  }, {
-    total: 0,
-    discount: 0,
-    gross: 0,
-  });
+  if(!item) {
+    return;
+  }
 
-  current.total = price.total.toFixed(2);
-  current.discount = price.discount.toFixed(2);
-  current.gross = price.gross.toFixed(2);
+  item.remove();
+  cart.save();
 
-  await current.save();
-
-  return renderCart(current);
+  return renderCommerceItem(item);
 }
-
-

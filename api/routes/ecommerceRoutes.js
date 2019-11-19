@@ -17,6 +17,8 @@ module.exports = function(app) {
     .get(cart.getCurrentCart);
   app.route('/cart/addItem')
     .post(cart.addItem);
+  app.route('/cart/deleteItem/:commerceItem')
+    .delete(cart.deleteItem);
 
   app.route('/login')
     .post(validateToken, user.login);
