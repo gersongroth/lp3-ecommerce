@@ -9,6 +9,7 @@ module.exports = function(app) {
   const cart = require('../controllers/cartController');
   const price = require('../controllers/priceController');
   const newsletter = require('../controllers/newsletterController');
+  const checkoutShipping = require('../controllers/checkout/shippingController');
 
   const { validateToken, validateLoggedIn } = require('../services/authService');
 
@@ -97,4 +98,10 @@ module.exports = function(app) {
   app.route('/newsletter')
     .post(newsletter.subscribe)
     .delete(newsletter.unsubscribe);
+
+  /**
+   * Checkout
+   */
+  app.route('/checkout/shipping/address')
+    .put(validateToken, checkoutShipping.selectAddress, price.repriceOrder, cart.getCurrent);
 };

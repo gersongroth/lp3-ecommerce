@@ -1,12 +1,17 @@
 const mongoose = require('mongoose');
 
-const addressSchema = new mongoose.Schema({
+const shippingPriceSchema = new mongoose.Schema({
+  total: {
+    type: Number,
+    default: 0,
+  },
+  // TODO - adicionar opções de desconto de frete
+});
+
+const shippingSchema = new mongoose.Schema({
   zipCode: {
     type: String,
     required: [true, 'CEP é obrigatório'],
-  },
-  description: {
-    type: String,
   },
   street: {
     type: String,
@@ -30,10 +35,6 @@ const addressSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Cidade é obrigatória'],
   },
-  state: {
-    type: String,
-    required: [true, 'Estado é obrigatório'],
-  },
   country: {
     type: String,
     required: [true, 'País é obrigatório'],
@@ -41,6 +42,10 @@ const addressSchema = new mongoose.Schema({
   reference: {
     type: String,
   },
+  receiverName: {
+    type: String,
+  },
+  price: shippingPriceSchema,
   createdAt: {
     type: Date,
     default: Date.now(),
@@ -48,9 +53,15 @@ const addressSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now(),
+  },
+  deliveryMethod: {
+    type: String,
+  },
+  carrier: {
+    type: String,
   }
 });
 
-const Address = mongoose.model('Address', addressSchema);
-module.exports = Address;
-module.exports.addressSchema = addressSchema;
+const Shipping = mongoose.model('Shipping', shippingSchema);
+module.exports = Shipping;
+module.exports.shippingSchema = shippingSchema;
