@@ -1,7 +1,7 @@
 'use strict';
 
 const User = require('../models/userSchema');
-const { getToken } = require('./authService');
+const { getToken, userLoggedIn } = require('./authService');
 const moment = require('moment');
 
 exports.findByUsername = async function(username) {
@@ -13,10 +13,40 @@ const findByToken = async function(headerToken) {
   if(!token || !token.userId) {
     return undefined;
   }
-  
+
   return await User.findOne({
     _id: token.userId,
   });
+}
+
+const generateRandomPassword = () => {
+  return Math.random().toString(36).substring(2, 15) 
+       + Math.random().toString(36).substring(2, 15);
+}
+
+exports.getAnonymousUser = async function(token) {
+  const user = await User.findOne({
+    username: token,
+    anonymous: true,
+  });
+
+  if(user) {
+    return user;
+  }
+
+  const newAnonymousUser = new User({
+    username: token,
+    email: `${token}@uricer.edu.br`,
+    createdAt: new Date(),
+    password: generateRandomPassword(),
+    legalDocument: '--------------',
+    anonymous: true,
+  });
+
+  const anonymous = await newAnonymousUser.save();
+  await userLoggedIn(token, anonymous);
+
+  return anonymous;
 }
 
 exports.findByToken = findByToken;
@@ -25,6 +55,7 @@ exports.login = async function(username, password) {
   const userWithUsername = await User.findOne({
     username,
     password,
+    anonymous: false,
   });
   if(userWithUsername) {
     return userWithUsername;

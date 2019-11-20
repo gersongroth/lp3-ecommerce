@@ -3,12 +3,15 @@
 const Order = require('../models/orderSchema');
 const CommerceItem = require('../models/commerceItemSchema');
 
-const { findByToken } = require('./userService');
+const { findByToken, getAnonymousUser } = require('./userService');
 const { getProduct } = require('./productService');
 
 // TODO - verificar melhor forma de serializar esses objetos
 const getCurrent = async function(token) {
-  const userModel = await findByToken(token);
+  let userModel = await findByToken(token);
+  if(!userModel) {
+    userModel = await getAnonymousUser(token);
+  }
 
   const lastCart = await Order.findOne({
     'owner._id': userModel._id,

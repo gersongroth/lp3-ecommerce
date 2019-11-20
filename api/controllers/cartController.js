@@ -92,11 +92,16 @@ const renderCommerceItem = (commerceItem) => {
 };
 
 const renderCart = (cartModel) => {
-  cartModel.owner = {
-    _id: cartModel.owner._id,
-    firstName: cartModel.owner.firstName,
-    lastName: cartModel.owner.lastName,
+  if(cartModel.owner.anonymous) {
+    cartModel.owner = undefined;
+  } else {
+    cartModel.owner = {
+      _id: cartModel.owner._id,
+      firstName: cartModel.owner.firstName,
+      lastName: cartModel.owner.lastName,
+    }
   }
+  
   cartModel.commerceItems = cartModel.commerceItems.map(renderCommerceItem);
   return cartModel;
 };

@@ -76,8 +76,8 @@ exports.validateLoggedIn = async function(req, res, next) {
   next();
 }
 
-exports.userLoggedIn = async function(req, user) {
-  const token = await findTokenFromRequest(req);
+exports.userLoggedIn = async function(headerToken, user) {
+  const token = await findToken(headerToken);
 
   return await Token.findOneAndUpdate({
     _id: token._id,
@@ -85,7 +85,7 @@ exports.userLoggedIn = async function(req, user) {
   {
     $set: {
       userId: user._id,
-      loggedIn: true,
+      loggedIn: !user.anonymous,
     }
   })
 }

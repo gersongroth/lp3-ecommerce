@@ -24,17 +24,19 @@ exports.login = async function(req, res) {
   if(!username || !password) {
     res
       .status(400)
-      .send('[LOGIN] Usuário e senha são obrigatórios');
+      .json({
+        success: false,
+        message: 'Usuário e senha são obrigatórios'
+      });
     return;
   }
 
   const user = await login(username, password);
 
-
   if(user){
     console.log(`[LOGIN] Usuário ${user.username} realizou login com sucesso.`)
 
-    const success = userLoggedIn(req, user);
+    const success = userLoggedIn(getHeaderToken(req), user);
     if(!success) {
       return res
         .status(500)

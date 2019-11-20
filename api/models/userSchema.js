@@ -44,7 +44,11 @@ const userSchema = new mongoose.Schema({
   },
   addresses: {
     type: [addressSchema],
-  }
+  },
+  anonymous: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const User = mongoose.model('User', userSchema);
