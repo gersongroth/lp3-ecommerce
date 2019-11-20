@@ -8,15 +8,17 @@ exports.findByUsername = async function(username) {
   return await User.findOne({username});
 }
 
+const findUserById = async function(userId) {
+  return await User.findById(userId);
+}
+
 const findByToken = async function(headerToken) {
   const token = await getToken(headerToken);
   if(!token || !token.userId) {
     return undefined;
   }
 
-  return await User.findOne({
-    _id: token.userId,
-  });
+  return await findUserById(token.userId);
 }
 
 const generateRandomPassword = () => {
@@ -39,7 +41,7 @@ exports.getAnonymousUser = async function(token) {
     email: `${token}@uricer.edu.br`,
     createdAt: new Date(),
     password: generateRandomPassword(),
-    legalDocument: '--------------',
+    legalDocument: token,
     anonymous: true,
   });
 
@@ -50,12 +52,13 @@ exports.getAnonymousUser = async function(token) {
 }
 
 exports.findByToken = findByToken;
+exports.findUserById = findUserById;
 
 exports.login = async function(username, password) {
   const userWithUsername = await User.findOne({
     username,
     password,
-    anonymous: false,
+    anonymous: {$ne: true},
   });
   if(userWithUsername) {
     return userWithUsername;
@@ -63,6 +66,7 @@ exports.login = async function(username, password) {
   const userWithLegalDocument = await User.findOne({
     password,
     legalDocument: username,
+    anonymous: {$ne: true},
   });
   if(userWithLegalDocument) {
     return userWithLegalDocument;
@@ -71,6 +75,7 @@ exports.login = async function(username, password) {
   return await User.findOne({
     password,
     email: username,
+    anonymous: {$ne: true},
   });
 }
 

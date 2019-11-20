@@ -1,8 +1,9 @@
 'use strict';
 
 const User = require('../models/userSchema');
-const { login, findByToken, updateUser } = require('../services/userService');
-const { getHeaderToken, userLoggedIn, logout } = require('../services/authService');
+const { login, findByToken, updateUser, findUserById } = require('../services/userService');
+const { getHeaderToken, userLoggedIn, logout, getToken } = require('../services/authService');
+const { mergeOrdersFromAnonymousUser } = require('../services/orderService');
 const moment = require('moment');
 
 const serializeUser = (user) => {
@@ -18,6 +19,12 @@ const serializeUser = (user) => {
     birthday: moment(user.birthday).format('DD/MM/YYYY'),
   }
 }
+
+const isAnonymousUser = (token) => {
+  return token && token.userId && !token.loggedIn;
+}
+
+// TODO - melhorar processo de login
 
 exports.login = async function(req, res) {
   const { username, password } = req.body;
@@ -36,6 +43,10 @@ exports.login = async function(req, res) {
   if(user){
     console.log(`[LOGIN] Usuário ${user.username} realizou login com sucesso.`)
 
+    const token = await getToken(getHeaderToken(req));
+    if (isAnonymousUser(token)) {
+      await mergeOrdersFromAnonymousUser(await findUserById(token.userId), user);
+    }
     const success = userLoggedIn(getHeaderToken(req), user);
     if(!success) {
       return res
