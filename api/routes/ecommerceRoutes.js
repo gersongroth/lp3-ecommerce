@@ -104,4 +104,7 @@ module.exports = function(app) {
    */
   app.route('/checkout/shipping/address')
     .put(validateToken, checkoutShipping.selectAddress, price.repriceOrder, cart.getCurrent);
+  app.route('/checkout/shipping/quote')
+    .get(validateToken, checkoutShipping.quoteShipping);
+
 };
