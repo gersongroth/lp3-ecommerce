@@ -43,7 +43,7 @@ const quoteShipping = async function(req, res) {
     deliveryTime: 15,
     price: (Math.random()*30+15).toFixed(2),
     carrier: 'Correios',
-    id: 1,
+    _id: 1,
     deliveryType: 'STANDARD'
   },
   {
@@ -51,7 +51,7 @@ const quoteShipping = async function(req, res) {
     deliveryTime: 5,
     price: (Math.random()*50+30).toFixed(2),
     carrier: 'Correios',
-    id: 2,
+    _id: 2,
     deliveryType: 'EXPRESS'
   },
   {
@@ -59,7 +59,7 @@ const quoteShipping = async function(req, res) {
     deliveryTime: 20,
     price: (Math.random()*20+10).toFixed(2),
     carrier: 'Total',
-    id: 3,
+    _id: 3,
     deliveryType: 'STANDARD'
   }]);
 };
