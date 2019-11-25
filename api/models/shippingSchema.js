@@ -54,6 +54,9 @@ const shippingSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
+  deliveryMethodId: {
+    type: String,
+  },
   deliveryMethod: {
     type: String,
   },

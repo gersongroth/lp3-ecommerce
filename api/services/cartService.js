@@ -46,7 +46,7 @@ exports.addItem = async function(token, item) {
   const newItem = new CommerceItem({
     product,
     productId: item.productId,
-    amount: item.amount,
+    amount: item.amount || 1,
   });
 
   return await Order.findOneAndUpdate(

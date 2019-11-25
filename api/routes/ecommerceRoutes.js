@@ -106,5 +106,6 @@ module.exports = function(app) {
     .put(validateToken, checkoutShipping.selectAddress, price.repriceOrder, cart.getCurrent);
   app.route('/checkout/shipping/quote')
     .get(validateToken, checkoutShipping.quoteShipping);
-
+  app.route('/checkout/shipping/delivery')
+    .put(validateToken, checkoutShipping.selectDeliveryMethod, price.repriceOrder, cart.getCurrent);
 };

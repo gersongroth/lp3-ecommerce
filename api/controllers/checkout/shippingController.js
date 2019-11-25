@@ -5,7 +5,7 @@ const Order = require('../../models/orderSchema');
 const {
   getCurrent,
 } = require('../../services/cartService');
-const { selectAddress } = require('../../services/checkout/shippingService')
+const { selectAddress, selectDeliveryMethod, getDeliveryMethods } = require('../../services/checkout/shippingService')
 const { getHeaderToken } = require('../../services/authService');
 
 exports.selectAddress = async function(req, res, next) {
@@ -38,31 +38,22 @@ const quoteShipping = async function(req, res) {
   }
 
   // TODO - criar cadastro de métodos de entrega ou utilizar serviço dos correios, por exemplo
-  return res.json([{
-    deliveryMethod: 'PAC',
-    deliveryTime: 15,
-    price: (Math.random()*30+15).toFixed(2),
-    carrier: 'Correios',
-    _id: 1,
-    deliveryType: 'STANDARD'
-  },
-  {
-    deliveryMethod: 'SEDEX',
-    deliveryTime: 5,
-    price: (Math.random()*50+30).toFixed(2),
-    carrier: 'Correios',
-    _id: 2,
-    deliveryType: 'EXPRESS'
-  },
-  {
-    deliveryMethod: 'TOTAL Standard',
-    deliveryTime: 20,
-    price: (Math.random()*20+10).toFixed(2),
-    carrier: 'Total',
-    _id: 3,
-    deliveryType: 'STANDARD'
-  }]);
+  return res.json(getDeliveryMethods(token, zipCode));
 };
 
 exports.quoteShipping = quoteShipping;
 
+exports.selectDeliveryMethod = async function(req, res, next) {
+  const token = getHeaderToken(req);
+
+  try {
+    await selectDeliveryMethod(token, req.body);
+    // TODO - validar
+    next();
+  } catch(e) {
+    console.error('[selectDeliveryMethod] - Error', e);
+    return res
+      .status(400)
+      .json(e);
+  }
+};
