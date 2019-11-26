@@ -1,7 +1,6 @@
 
 'use strict';
 
-const Order = require('../models/orderSchema');
 const {
   getCurrent,
   addItem,
@@ -91,6 +90,31 @@ const renderCommerceItem = (commerceItem) => {
   return commerceItem;
 };
 
+const formatCardNumber = function(cardNumber) {
+  if(cardNumber) {
+    // TODO - not good
+    return cardNumber.replace(/(\d*?)(\d{4})/, "************$1");
+  }
+  return '**** **** **** ****';
+}
+
+const renderPaymentGroup = (paymentGroup) => {
+  return {
+    numberOfInstallments: paymentGroup.numberOfInstallments,
+    price: paymentGroup.price,
+    country: paymentGroup.country,
+    number: paymentGroup.number,
+    neighborhood: paymentGroup.neighborhood,
+    street: paymentGroup.street,
+    complement: paymentGroup.complement,
+    zipCode: paymentGroup.zipCode,
+    phoneNumber: paymentGroup.phoneNumber,
+    city: paymentGroup.city,
+    cardNumber: formatCardNumber(paymentGroup.cardNumber),
+  };
+};
+
+
 const renderCart = (cartModel) => {
   if(cartModel.owner.anonymous) {
     cartModel.owner = undefined;
@@ -103,5 +127,7 @@ const renderCart = (cartModel) => {
   }
   
   cartModel.commerceItems = cartModel.commerceItems.map(renderCommerceItem);
+  cartModel.paymentGroups = cartModel.paymentGroups.map(renderPaymentGroup);
+
   return cartModel;
 };

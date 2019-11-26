@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const { userSchema } = require('./userSchema');
 const { commerceItemSchema } = require('./commerceItemSchema');
 const { shippingSchema } = require('./shippingSchema'); 
+const { paymentSchema } = require('./paymentSchema');
 
 const orderSchema = new mongoose.Schema({
   status: {
@@ -46,7 +47,8 @@ const orderSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
-  shippingGroups: [shippingSchema]
+  shippingGroups: [shippingSchema],
+  paymentGroups: [paymentSchema],
 });
 
 const Order = mongoose.model('Order', orderSchema);

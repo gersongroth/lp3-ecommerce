@@ -10,6 +10,8 @@ module.exports = function(app) {
   const price = require('../controllers/priceController');
   const newsletter = require('../controllers/newsletterController');
   const checkoutShipping = require('../controllers/checkout/shippingController');
+  const checkoutPayment = require('../controllers/checkout/paymentController');
+
 
   const { validateToken, validateLoggedIn } = require('../services/authService');
 
@@ -110,5 +112,8 @@ module.exports = function(app) {
     .put(validateToken, checkoutShipping.selectDeliveryMethod, price.repriceOrder, cart.getCurrent);
   app.route('/checkout/shipping/cheapest')
     .put(validateToken, checkoutShipping.selectCheapestMethod, price.repriceOrder, cart.getCurrent);
+
+  app.route('/checkout/payment/select')
+    .put(validateToken, price.repriceOrder, checkoutPayment.selectPayment, cart.getCurrent);
 
   };
