@@ -105,7 +105,10 @@ module.exports = function(app) {
   app.route('/checkout/shipping/address')
     .put(validateToken, checkoutShipping.selectAddress, price.repriceOrder, cart.getCurrent);
   app.route('/checkout/shipping/quote')
-    .get(validateToken, checkoutShipping.quoteShipping);
+    .post(validateToken, checkoutShipping.quoteShipping);
   app.route('/checkout/shipping/delivery')
     .put(validateToken, checkoutShipping.selectDeliveryMethod, price.repriceOrder, cart.getCurrent);
-};
+  app.route('/checkout/shipping/cheapest')
+    .put(validateToken, checkoutShipping.selectCheapestMethod, price.repriceOrder, cart.getCurrent);
+
+  };

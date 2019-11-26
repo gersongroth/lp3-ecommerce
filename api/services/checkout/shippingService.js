@@ -8,8 +8,7 @@ const { getCurrent } = require('../cartService');
 const selectAddress = async function(token, address) {
   const order = await getCurrent(token);
   if(!order) {
-    // TODO - exception
-    return;
+    throw new Error('Pedido não existe!');
   }
 
   const shipping = new Shipping(address);
@@ -85,8 +84,14 @@ const getDeliveryMethods = async function(token, zipCode) {
   }];
 }
 
+const selectCheapestMethod = async function(token, address) {
+  await selectAddress(token, address);
+  const deliveryMethods = await getDeliveryMethods();
+  const deliveryMethod = deliveryMethods.sort((a,b) => +a.price - +b.price)[0];
+  await selectDeliveryMethod(token, deliveryMethod);
+}
 
 exports.selectAddress = selectAddress;
 exports.selectDeliveryMethod = selectDeliveryMethod;
 exports.getDeliveryMethods = getDeliveryMethods;
-
+exports.selectCheapestMethod = selectCheapestMethod;

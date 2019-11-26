@@ -5,15 +5,30 @@ const Order = require('../../models/orderSchema');
 const {
   getCurrent,
 } = require('../../services/cartService');
-const { selectAddress, selectDeliveryMethod, getDeliveryMethods } = require('../../services/checkout/shippingService')
+const {
+  selectAddress,
+  selectDeliveryMethod,
+  getDeliveryMethods,
+  selectCheapestMethod,
+} = require('../../services/checkout/shippingService')
 const { getHeaderToken } = require('../../services/authService');
 
 exports.selectAddress = async function(req, res, next) {
   const token = getHeaderToken(req);
 
-  await selectAddress(token, req.body);
-  // TODO - validar
-  next();
+  try {
+    await selectAddress(token, req.body);
+    // TODO - validar
+    next();
+  } catch(e) {
+    console.error('[selectAddress] - Error', e);
+    return res
+      .status(400)
+      .json({
+        success: false,
+        message: e.toString()
+      });
+  }
 };
 
 const quoteShipping = async function(req, res) {
@@ -60,3 +75,21 @@ exports.selectDeliveryMethod = async function(req, res, next) {
       });
   }
 };
+
+exports.selectCheapestMethod = async function(req, res, next) {
+  const token = getHeaderToken(req);
+
+  try {
+    await selectCheapestMethod(token, req.body);
+    // TODO - validar
+    next();
+  } catch(e) {
+    console.error('[selectCheapestMethod] - Error', e);
+    return res
+      .status(400)
+      .json({
+        success: false,
+        message: e.toString()
+      });
+  }
+}
