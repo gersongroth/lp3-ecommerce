@@ -60,6 +60,12 @@ const shippingSchema = new mongoose.Schema({
   deliveryMethod: {
     type: String,
   },
+  deliveryTime: {
+    type: Number,
+  },
+  deliveryType: {
+    type: String,
+  },
   carrier: {
     type: String,
   }

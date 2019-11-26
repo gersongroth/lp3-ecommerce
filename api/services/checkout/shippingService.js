@@ -44,11 +44,14 @@ const selectDeliveryMethod = async function(token, deliveryMethod) {
 
   await shippingGroup.set({
     deliveryMethodId: deliveryMethodId,
-    deliveryMethod: deliveryMethod.deliveryMethod,
-    carrier: deliveryMethod.carrier,
+    deliveryMethod: deliveryMethodQuote.deliveryMethod,
+    carrier: deliveryMethodQuote.carrier,
     price: {
-      total: +deliveryMethod.price
-    }
+      total: +deliveryMethodQuote.price
+    },
+    deliveryType: deliveryMethodQuote.deliveryType,
+    deliveryTime: deliveryMethodQuote.deliveryTime,
+    updatedAt: new Date(),
   });
 
   await order.save();

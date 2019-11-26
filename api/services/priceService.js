@@ -6,7 +6,7 @@ const { getCurrent } = require('./cartService');
 const calculateCart = async (token) => {
   const current = await getCurrent(token);
 
-  const price = current.commerceItems.reduce((accumulator, item) => {
+  const itemsPrice = current.commerceItems.reduce((accumulator, item) => {
     return {
       total: accumulator.total + item.total,
       discount: accumulator.discount + item.discount,
@@ -20,11 +20,21 @@ const calculateCart = async (token) => {
     totalItens: 0,
   });
 
-  current.total = price.total.toFixed(2);
-  current.discount = price.discount.toFixed(2);
-  current.gross = price.gross.toFixed(2);
-  current.totalNumberOfItems = price.totalItens;
+  const shippingPrice = current.shippingGroups.reduce((accumulator, shippingGroup) => {
+    if (shippingGroup.price) {
+      return shippingGroup.price.total + accumulator;
+    }
+
+    return accumulator;
+  }, 0);
+
+  current.subtotal = itemsPrice.total.toFixed(2);
+  current.total =(itemsPrice.total + shippingPrice).toFixed(2);
+  current.discount = itemsPrice.discount.toFixed(2);
+  current.gross = itemsPrice.gross.toFixed(2);
+  current.freight = shippingPrice.toFixed(2);
   current.numberOfDistinctProducts = current.commerceItems.length;
+  current.totalNumberOfItems = itemsPrice.totalItens;
 
   await current.save();
 

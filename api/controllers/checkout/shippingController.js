@@ -54,6 +54,9 @@ exports.selectDeliveryMethod = async function(req, res, next) {
     console.error('[selectDeliveryMethod] - Error', e);
     return res
       .status(400)
-      .json(e);
+      .json({
+        success: false,
+        message: e.toString()
+      });
   }
 };

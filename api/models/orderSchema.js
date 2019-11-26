@@ -34,6 +34,10 @@ const orderSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  subtotal: {
+    type: Number,
+    default: 0,
+  },
   totalNumberOfItems: {
     type: Number,
     default: 0
