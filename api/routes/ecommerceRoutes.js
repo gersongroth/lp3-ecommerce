@@ -125,4 +125,7 @@ module.exports = function(app) {
   app.route('/order')
     .get(validateToken, validateLoggedIn, order.getSubmittedOrders);
 
+  app.route('/order/:id')
+    .get(validateToken, validateLoggedIn, order.getOrder);
+
 };

@@ -52,7 +52,18 @@ const getOrdersFromUser = async function (user) {
   }).sort({ 'submittedDate' : -1 });
 }
 
+const getOrder = async function (token, orderId) {
+  const user = await findByToken(token);
+
+  return await Order.findOne({
+    'owner._id': user._id,
+    _id: orderId,
+    'status': { $ne: 'INCOMPLETE' },
+  });
+}
+
 exports.mergeOrdersFromAnonymousUser = mergeOrdersFromAnonymousUser;
 exports.findIncompleteOrderFromUser = findIncompleteOrderFromUser;
 exports.getOrdersFromUser = getOrdersFromUser;
 exports.getSubmittedOrders = getSubmittedOrders;
+exports.getOrder = getOrder;
