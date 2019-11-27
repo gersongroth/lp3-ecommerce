@@ -31,7 +31,17 @@ const getCurrent = async function(token) {
   return newCart;
 };
 
-exports.getCurrent = getCurrent;
+const getLastOrder = async function(token) {
+  let userModel = await findByToken(token);
+  if(!userModel) {
+    return {};
+  }
+
+  return await Order.findOne({
+    'owner._id': userModel._id,
+    'status': { $ne: 'INCOMPLETE' },
+  }).sort({ 'submittedDate' : -1 });
+};
 
 exports.addItem = async function(token, item) {
   const cart = await getCurrent(token);
@@ -90,3 +100,6 @@ exports.updateItem = async function(token, commerceItemId, item) {
 
   return itemModel;
 }
+
+exports.getCurrent = getCurrent;
+exports.getLastOrder = getLastOrder;

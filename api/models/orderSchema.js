@@ -11,9 +11,14 @@ const orderSchema = new mongoose.Schema({
     enum: ['INCOMPLETE', 'PENDING', 'PAID_WAITING_SHIP', 'PAID_WAITING_DELIVERY', 'INVOICED', 'CANCELED', 'CONCLUDED'],
     default: 'INCOMPLETE',
   },
-  owner: userSchema,
+  owner: Object,
   createdAt: {
     type: Date,
+    default: new Date(),
+  },
+  updatedAt: {
+    type: Date,
+    default: new Date(),
   },
   submittedDate: {
     type: Date,

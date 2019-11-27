@@ -6,6 +6,7 @@ const {
   addItem,
   deleteItem,
   updateItem,
+  getLastOrder,
 } = require('../services/cartService');
 const { getHeaderToken } = require('../services/authService');
 
@@ -15,6 +16,14 @@ exports.getCurrent = async function(req, res) {
   const current = await getCurrent(token);
   return res
     .json(renderCart(current));
+};
+
+exports.getLastOrder = async function(req, res) {
+  const token = getHeaderToken(req);
+
+  const last = await getLastOrder(token);
+  return res
+    .json(renderCart(last));
 };
 
 exports.getItems = async function(req, res) {
@@ -116,6 +125,9 @@ const renderPaymentGroup = (paymentGroup) => {
 
 
 const renderCart = (cartModel) => {
+  if(!cartModel) {
+    return {};
+  }
   if(cartModel.owner.anonymous) {
     cartModel.owner = undefined;
   } else {

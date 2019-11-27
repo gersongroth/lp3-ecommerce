@@ -62,6 +62,10 @@ const repriceCommerceItems = async (cart) => {
   for (const commerceItem of commerceItems) {
     await repriceCommerceItem(cart, commerceItem._id)
   }
+
+  cart.set({
+    updatedAt: new Date(),
+  });
   
   cart.save();
 }
@@ -77,9 +81,32 @@ const repriceCommerceItem = async (cart, commerceItemId) => {
   await commerceItem.set(updateItem);
 }
 
+const repricePayment = async (token) => {
+  const order = await getCurrent(token);
+  if(order.paymentGroups.length == 0) {
+    return;
+  }
+  const payment = order.paymentGroups.id(order.paymentGroups[0]._id);
+
+  await payment.set({
+    price: {
+      total: +order.total
+    },
+    updatedAt: new Date(),
+  });
+
+  order.set({
+    updatedAt: new Date(),
+  });
+
+  await order.save();
+}
+
 exports.repriceOrder = async function(token) {
   const cart = await getCurrent(token);
 
   await repriceCommerceItems(cart);
   await calculateCart(token);
+  await repricePayment(token);
 }
+

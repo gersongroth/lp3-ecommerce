@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { productSchema } = require('./productSchema');
 const commerceItemSchema = new mongoose.Schema({
   /*
   status: {
@@ -12,7 +11,7 @@ const commerceItemSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Id do Produto é obrigatório'],
   },
-  product: productSchema,
+  product: Object,
   amount: {
     type: Number,
     required: [true, 'Quantidade do item é obrigatória'],

@@ -11,7 +11,7 @@ module.exports = function(app) {
   const newsletter = require('../controllers/newsletterController');
   const checkoutShipping = require('../controllers/checkout/shippingController');
   const checkoutPayment = require('../controllers/checkout/paymentController');
-
+  const checkout = require('../controllers/checkout/checkoutController');
 
   const { validateToken, validateLoggedIn } = require('../services/authService');
 
@@ -22,6 +22,8 @@ module.exports = function(app) {
    */
   app.route('/cart')
     .get(validateToken, price.repriceOrder, cart.getCurrent);
+  app.route('/cart/last')
+    .get(validateToken, cart.getLastOrder);
   app.route('/cart/addItem')
     .post(validateToken, cart.addItem, price.repriceOrder, cart.getCurrent);
   app.route('/cart/deleteItem/:commerceItem')
@@ -115,5 +117,8 @@ module.exports = function(app) {
 
   app.route('/checkout/payment/select')
     .put(validateToken, price.repriceOrder, checkoutPayment.selectPayment, cart.getCurrent);
+
+  app.route('/checkout/finish')
+    .post(validateToken, price.repriceOrder, checkout.finish, cart.getLastOrder);
 
   };
