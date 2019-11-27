@@ -120,6 +120,7 @@ const renderPaymentGroup = (paymentGroup) => {
     phoneNumber: paymentGroup.phoneNumber,
     city: paymentGroup.city,
     cardNumber: formatCardNumber(paymentGroup.cardNumber),
+    paymentMethod: paymentGroup.paymentType,
   };
 };
 
