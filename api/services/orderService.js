@@ -1,6 +1,7 @@
 'use strict';
 
 const Order = require('../models/orderSchema');
+const { findByToken } = require('../services/userService');
 
 // TODO - verificar melhor forma de serializar esses objetos
 const mergeOrdersFromAnonymousUser = async function(anonymousUser, loggedUser) {
@@ -39,5 +40,19 @@ const findIncompleteOrderFromUser = async function (user) {
   })
 }
 
+const getSubmittedOrders = async function (token) {
+  const userModel = await findByToken(token);
+  return await getOrdersFromUser(userModel);
+}
+
+const getOrdersFromUser = async function (user) {
+  return await Order.find({
+    'owner._id': user._id,
+    'status': { $ne: 'INCOMPLETE' },
+  }).sort({ 'submittedDate' : -1 });
+}
+
 exports.mergeOrdersFromAnonymousUser = mergeOrdersFromAnonymousUser;
 exports.findIncompleteOrderFromUser = findIncompleteOrderFromUser;
+exports.getOrdersFromUser = getOrdersFromUser;
+exports.getSubmittedOrders = getSubmittedOrders;

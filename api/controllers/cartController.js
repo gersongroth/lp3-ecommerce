@@ -144,3 +144,5 @@ const renderCart = (cartModel) => {
 
   return cartModel;
 };
+
+exports.renderCart = renderCart;

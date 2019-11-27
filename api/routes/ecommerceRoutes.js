@@ -12,6 +12,7 @@ module.exports = function(app) {
   const checkoutShipping = require('../controllers/checkout/shippingController');
   const checkoutPayment = require('../controllers/checkout/paymentController');
   const checkout = require('../controllers/checkout/checkoutController');
+  const order = require('../controllers/orderController');
 
   const { validateToken, validateLoggedIn } = require('../services/authService');
 
@@ -107,18 +108,21 @@ module.exports = function(app) {
    * Checkout
    */
   app.route('/checkout/shipping/address')
-    .put(validateToken, checkoutShipping.selectAddress, price.repriceOrder, cart.getCurrent);
+    .put(validateToken, validateLoggedIn, checkoutShipping.selectAddress, price.repriceOrder, cart.getCurrent);
   app.route('/checkout/shipping/quote')
-    .post(validateToken, checkoutShipping.quoteShipping);
+    .post(validateToken, validateLoggedIn, checkoutShipping.quoteShipping);
   app.route('/checkout/shipping/delivery')
-    .put(validateToken, checkoutShipping.selectDeliveryMethod, price.repriceOrder, cart.getCurrent);
+    .put(validateToken, validateLoggedIn, checkoutShipping.selectDeliveryMethod, price.repriceOrder, cart.getCurrent);
   app.route('/checkout/shipping/cheapest')
-    .put(validateToken, checkoutShipping.selectCheapestMethod, price.repriceOrder, cart.getCurrent);
+    .put(validateToken, validateLoggedIn, checkoutShipping.selectCheapestMethod, price.repriceOrder, cart.getCurrent);
 
   app.route('/checkout/payment/select')
-    .put(validateToken, price.repriceOrder, checkoutPayment.selectPayment, cart.getCurrent);
+    .put(validateToken, validateLoggedIn, price.repriceOrder, checkoutPayment.selectPayment, cart.getCurrent);
 
   app.route('/checkout/finish')
-    .post(validateToken, price.repriceOrder, checkout.finish, cart.getLastOrder);
+    .post(validateToken, validateLoggedIn, price.repriceOrder, checkout.finish, cart.getLastOrder);
 
-  };
+  app.route('/order')
+    .get(validateToken, validateLoggedIn, order.getSubmittedOrders);
+
+};
