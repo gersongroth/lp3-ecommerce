@@ -108,16 +108,16 @@ module.exports = function(app) {
    * Checkout
    */
   app.route('/checkout/shipping/address')
-    .put(validateToken, validateLoggedIn, checkoutShipping.selectAddress, price.repriceOrder, cart.getCurrent);
+    .post(validateToken, validateLoggedIn, checkoutShipping.selectAddress, price.repriceOrder, cart.getCurrent);
   app.route('/checkout/shipping/quote')
     .post(validateToken, validateLoggedIn, checkoutShipping.quoteShipping);
   app.route('/checkout/shipping/delivery')
-    .put(validateToken, validateLoggedIn, checkoutShipping.selectDeliveryMethod, price.repriceOrder, cart.getCurrent);
+    .post(validateToken, validateLoggedIn, checkoutShipping.selectDeliveryMethod, price.repriceOrder, cart.getCurrent);
   app.route('/checkout/shipping/cheapest')
-    .put(validateToken, validateLoggedIn, checkoutShipping.selectCheapestMethod, price.repriceOrder, cart.getCurrent);
+    .post(validateToken, validateLoggedIn, checkoutShipping.selectCheapestMethod, price.repriceOrder, cart.getCurrent);
 
   app.route('/checkout/payment/select')
-    .put(validateToken, validateLoggedIn, price.repriceOrder, checkoutPayment.selectPayment, cart.getCurrent);
+    .post(validateToken, validateLoggedIn, price.repriceOrder, checkoutPayment.selectPayment, cart.getCurrent);
 
   app.route('/checkout/finish')
     .post(validateToken, validateLoggedIn, price.repriceOrder, checkout.finish, cart.getLastOrder);
